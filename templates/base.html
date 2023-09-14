@@ -1,0 +1,120 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- basic -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1" />
+    <!-- site metas -->
+    <title>Tablas de mortalidad para la amazonía</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="Daniel Lara" />
+
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="{% static 'favicon/apple-touch-icon.png' %}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="{% static 'favicon/favicon-32x32.png' %}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="{% static 'favicon/favicon-16x16.png' %}"
+    />
+    <link rel="manifest" href="{% static 'favicon/site.webmanifest' %}" />
+    <link
+      rel="mask-icon"
+      href="{% static 'favicon/safari-pinned-tab.svg' %}"
+      color="#5bbad5"
+    />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- bootstrap css -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+      crossorigin="anonymous"
+    />
+    <!-- style css -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/style.css' %}"
+    />
+  </head>
+
+  <body>
+    <!-- header section start -->
+    <div class="header_section">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="logo">
+          <a href="/"
+            ><img
+              width="70%"
+              style="margin-top: 10px"
+              src="{% static 'img/EPN.png' %}"
+          /></a>
+        </div>
+        <div class="navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'Index' %}">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'Hipotesis' %}">Hipótesis</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'RepartoSimple' %}">Simple</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'SimpleRevalorizado' %}"
+                >Simple Revalorizado</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'Escalonado' %}">Escalonado</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'RepartoCapitales' %}"
+                >Reparto de capitales</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'Capitalizacion' %}"
+                >Capitalización</a
+              >
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    {% block content %} {% endblock %}
+
+    <div class="copyright_section">
+      <p class="copyright_text" style="margin: 2px">
+        Escuela Politécnica Nacional - Facultad de Ciencias
+      </p>
+      <p class="copyright_text" style="margin: 2px">
+        Matemática Actuarial - Implementado por
+        <a href="mailto:daniel.lara01@epn.edu.ec">Daniel Matías Lara</a>
+      </p>
+    </div>
+    <!-- copyright section end -->
+    <!-- Javascript files-->
+  </body>
+</html>

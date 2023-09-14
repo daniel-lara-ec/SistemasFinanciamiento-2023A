@@ -1,0 +1,512 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.1/echarts.min.js"></script>
+<script src="{% static 'js/RepartoCapitales.js' %}"></script>
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+></script>
+
+<div class="main" style="padding-left: 5%; padding-bottom: 100px">
+  <h2>Reparto de capitales</h2>
+
+  <div class="row" style="padding-bottom: 20px; padding-top: 20px">
+    <div class="col-sm-6">
+      <a
+        href="{% url  'DescargarRepartoCapitales'%}"
+        class="btn btn-success"
+        style="float: left"
+        >Descargar</a
+      >
+    </div>
+  </div>
+
+  <div class="parrafo">
+    <p>
+      La idea en este sistema de capitalización es adquirir rentas vitalicias
+      para cada una de los nuevos jubilados en el año haciendo uso de las
+      aportaciones recibidas en el mismo año.
+    </p>
+
+    <p>
+      Teniendo en cuenta las hipótesis del modelo, que la edad de jubilacion es
+      $45$ años ( i.e, tarificación se realizará para individuos de $46$ años) y
+      que los jubilados recibirán cuantías mensuales constantes más una cuantía
+      adicional y un salario básico unificado al final del año, por motivos de
+      décimos, tenemos que el valor de la renta es:
+    </p>
+
+    <p>
+      $$ \begin{equation*} C\cdot T_{r}\cdot a_{46}^{(12)} \cdot
+      J+\left(SBU+C\cdot T_{r}\right) a_{46}\cdot J, \end{equation*} $$ donde:
+    </p>
+
+    <ul style="padding-left: 3%">
+      <li><p>\(C\) es el valor de las pensiones mensuales</p></li>
+      <li><p>\(T_r\) es la taza de reemplazo</p></li>
+      <li><p>\(J\approx 927\) es el número de jubilados por año</p></li>
+    </ul>
+
+    <p>
+      Para calcular \(a_{46}^{(12)}\) y \(a_{46}\), hicimos uso de los factores
+      conmutados (los que calculamos medinate la tabla de mortalidad Ecuador
+      2023) y la hipótesis de Woolhouse ; es decir: $$ \begin{equation*}
+      a_{46}=\frac{N_{47}}{D_{46}} \quad \text{ y }\quad
+      a_46^{(12)}=12\ddot{a}_{46}-13/2\approx
+      12\frac{N_{46}}{D_{46}}-\frac{13}{2}. \end{equation*} $$
+    </p>
+
+    <p class="parrafo" style="color: red">
+      Si deseas revisar la metodoogía de cálculo de los beneficios, puedes
+      descargar el archivo del modelo.
+    </p>
+  </div>
+  <h3>Consideraciones</h3>
+
+  <p class="parrafo">
+    A continuación se encuentra un ejemplo del modelo con los siguientes
+    parámetros:
+  </p>
+
+  <!-- table of 2 rows and two columns -->
+  <table class="table table-striped" style="width: 90%; overflow-x: auto">
+    <thead>
+      <tr>
+        <th scope="col">Parámetro</th>
+        <th scope="col">Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Interés (Sistema de reparto)</th>
+        <td>4.00%</td>
+      </tr>
+      <tr>
+        <th scope="row">Interés rentas</th>
+        <td>6.35%</td>
+      </tr>
+      <tr>
+        <th scope="row">Tasa de reemplazo</th>
+        <td>80%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Resúmen del modelo</h2>
+
+  <table
+    class="table table-striped"
+    style="width: 90%; overflow-x: auto; display: block"
+    id="tabla_pensionistas"
+  >
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">1</th>
+        <th scope="col">2</th>
+        <th scope="col">3</th>
+        <th scope="col">4</th>
+        <th scope="col">5</th>
+        <th scope="col">6</th>
+        <th scope="col">7</th>
+        <th scope="col">8</th>
+        <th scope="col">9</th>
+        <th scope="col">10</th>
+        <th scope="col">11</th>
+        <th scope="col">12</th>
+        <th scope="col">13</th>
+        <th scope="col">14</th>
+        <th scope="col">15</th>
+        <th scope="col">16</th>
+        <th scope="col">17</th>
+        <th scope="col">18</th>
+        <th scope="col">19</th>
+        <th scope="col">20</th>
+        <th scope="col">21</th>
+        <th scope="col">22</th>
+        <th scope="col">23</th>
+        <th scope="col">24</th>
+        <th scope="col">25</th>
+        <th scope="col">26</th>
+        <th scope="col">27</th>
+        <th scope="col">28</th>
+        <th scope="col">29</th>
+        <th scope="col">30</th>
+        <th scope="col">31</th>
+        <th scope="col">32</th>
+        <th scope="col">33</th>
+        <th scope="col">34</th>
+        <th scope="col">35</th>
+        <th scope="col">36</th>
+        <th scope="col">37</th>
+        <th scope="col">38</th>
+        <th scope="col">39</th>
+        <th scope="col">40</th>
+        <th scope="col">41</th>
+        <th scope="col">42</th>
+        <th scope="col">43</th>
+        <th scope="col">44</th>
+        <th scope="col">45</th>
+        <th scope="col">46</th>
+        <th scope="col">47</th>
+        <th scope="col">48</th>
+        <th scope="col">49</th>
+        <th scope="col">50</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for fila in json_resumen %}
+      <tr>
+        <th scope="row">{{ fila.Descripcion}}</th>
+        <td>{{ fila.1 }}</td>
+        <td>{{ fila.2 }}</td>
+        <td>{{ fila.3 }}</td>
+        <td>{{ fila.4 }}</td>
+        <td>{{ fila.5 }}</td>
+        <td>{{ fila.6 }}</td>
+        <td>{{ fila.7 }}</td>
+        <td>{{ fila.8 }}</td>
+        <td>{{ fila.9 }}</td>
+        <td>{{ fila.10 }}</td>
+        <td>{{ fila.11 }}</td>
+        <td>{{ fila.12 }}</td>
+        <td>{{ fila.13 }}</td>
+        <td>{{ fila.14 }}</td>
+        <td>{{ fila.15 }}</td>
+        <td>{{ fila.16 }}</td>
+        <td>{{ fila.17 }}</td>
+        <td>{{ fila.18 }}</td>
+        <td>{{ fila.19 }}</td>
+        <td>{{ fila.20 }}</td>
+        <td>{{ fila.21 }}</td>
+        <td>{{ fila.22 }}</td>
+        <td>{{ fila.23 }}</td>
+        <td>{{ fila.24 }}</td>
+        <td>{{ fila.25 }}</td>
+        <td>{{ fila.26 }}</td>
+        <td>{{ fila.27 }}</td>
+        <td>{{ fila.28 }}</td>
+        <td>{{ fila.29 }}</td>
+        <td>{{ fila.30 }}</td>
+        <td>{{ fila.31 }}</td>
+        <td>{{ fila.32 }}</td>
+        <td>{{ fila.33 }}</td>
+        <td>{{ fila.34 }}</td>
+        <td>{{ fila.35 }}</td>
+        <td>{{ fila.36 }}</td>
+        <td>{{ fila.37 }}</td>
+        <td>{{ fila.38 }}</td>
+        <td>{{ fila.39 }}</td>
+        <td>{{ fila.40 }}</td>
+        <td>{{ fila.41 }}</td>
+        <td>{{ fila.42 }}</td>
+        <td>{{ fila.43 }}</td>
+        <td>{{ fila.44 }}</td>
+        <td>{{ fila.45 }}</td>
+        <td>{{ fila.46 }}</td>
+        <td>{{ fila.47 }}</td>
+        <td>{{ fila.48 }}</td>
+        <td>{{ fila.49 }}</td>
+        <td>{{ fila.50 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Rentas</h2>
+
+  <table
+    class="table table-striped"
+    style="width: 90%; overflow-x: auto; display: block"
+    id="tabla_pensionistas"
+  >
+    <thead>
+      <tr>
+        <th scope="col">Descripción</th>
+        <th scope="col">Valor compra renta</th>
+        <th scope="col">Tasa cotización</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for fila in json_rentas %}
+      <tr>
+        <th scope="row">{{ fila.Descripcion}}</th>
+        <td>{{ fila.ValCompraRenta }}</td>
+        <td>{{ fila.TasaCotizacion }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Gastos por pensiones</h2>
+
+  <table
+    class="table table-striped"
+    style="width: 90%; overflow-x: auto; display: block"
+    id="tabla_gastos"
+  >
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">1</th>
+        <th scope="col">2</th>
+        <th scope="col">3</th>
+        <th scope="col">4</th>
+        <th scope="col">5</th>
+        <th scope="col">6</th>
+        <th scope="col">7</th>
+        <th scope="col">8</th>
+        <th scope="col">9</th>
+        <th scope="col">10</th>
+        <th scope="col">11</th>
+        <th scope="col">12</th>
+        <th scope="col">13</th>
+        <th scope="col">14</th>
+        <th scope="col">15</th>
+        <th scope="col">16</th>
+        <th scope="col">17</th>
+        <th scope="col">18</th>
+        <th scope="col">19</th>
+        <th scope="col">20</th>
+        <th scope="col"></th>
+        <th scope="col">1</th>
+        <th scope="col">2</th>
+        <th scope="col">3</th>
+        <th scope="col">4</th>
+        <th scope="col">5</th>
+        <th scope="col">6</th>
+        <th scope="col">7</th>
+        <th scope="col">8</th>
+        <th scope="col">9</th>
+        <th scope="col">10</th>
+        <th scope="col">11</th>
+        <th scope="col">12</th>
+        <th scope="col">13</th>
+        <th scope="col">14</th>
+        <th scope="col">15</th>
+        <th scope="col">16</th>
+        <th scope="col">17</th>
+        <th scope="col">18</th>
+        <th scope="col">19</th>
+        <th scope="col">20</th>
+        <th scope="col">21</th>
+        <th scope="col">22</th>
+        <th scope="col">23</th>
+        <th scope="col">24</th>
+        <th scope="col">25</th>
+        <th scope="col">26</th>
+        <th scope="col">27</th>
+        <th scope="col">28</th>
+        <th scope="col">29</th>
+        <th scope="col">30</th>
+        <th scope="col">31</th>
+        <th scope="col">32</th>
+        <th scope="col">33</th>
+        <th scope="col">34</th>
+        <th scope="col">35</th>
+        <th scope="col">36</th>
+        <th scope="col">37</th>
+        <th scope="col">38</th>
+        <th scope="col">39</th>
+        <th scope="col">40</th>
+        <th scope="col">41</th>
+        <th scope="col">42</th>
+        <th scope="col">43</th>
+        <th scope="col">44</th>
+        <th scope="col">45</th>
+        <th scope="col">46</th>
+        <th scope="col">47</th>
+        <th scope="col">48</th>
+        <th scope="col">49</th>
+        <th scope="col">50</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for fila in json_gastos %}
+      <tr>
+        <th scope="row">{{ fila.Descripcion}}</th>
+        <td>{{ fila.1 }}</td>
+        <td>{{ fila.2 }}</td>
+        <td>{{ fila.3 }}</td>
+        <td>{{ fila.4 }}</td>
+        <td>{{ fila.5 }}</td>
+        <td>{{ fila.6 }}</td>
+        <td>{{ fila.7 }}</td>
+        <td>{{ fila.8 }}</td>
+        <td>{{ fila.9 }}</td>
+        <td>{{ fila.10 }}</td>
+        <td>{{ fila.11 }}</td>
+        <td>{{ fila.12 }}</td>
+        <td>{{ fila.13 }}</td>
+        <td>{{ fila.14 }}</td>
+        <td>{{ fila.15 }}</td>
+        <td>{{ fila.16 }}</td>
+        <td>{{ fila.17 }}</td>
+        <td>{{ fila.18 }}</td>
+        <td>{{ fila.19 }}</td>
+        <td>{{ fila.20 }}</td>
+        <td>{{ fila.21 }}</td>
+        <td>{{ fila.22 }}</td>
+        <td>{{ fila.23 }}</td>
+        <td>{{ fila.24 }}</td>
+        <td>{{ fila.25 }}</td>
+        <td>{{ fila.26 }}</td>
+        <td>{{ fila.27 }}</td>
+        <td>{{ fila.28 }}</td>
+        <td>{{ fila.29 }}</td>
+        <td>{{ fila.30 }}</td>
+        <td>{{ fila.31 }}</td>
+        <td>{{ fila.32 }}</td>
+        <td>{{ fila.33 }}</td>
+        <td>{{ fila.34 }}</td>
+        <td>{{ fila.35 }}</td>
+        <td>{{ fila.36 }}</td>
+        <td>{{ fila.37 }}</td>
+        <td>{{ fila.38 }}</td>
+        <td>{{ fila.39 }}</td>
+        <td>{{ fila.40 }}</td>
+        <td>{{ fila.41 }}</td>
+        <td>{{ fila.42 }}</td>
+        <td>{{ fila.43 }}</td>
+        <td>{{ fila.44 }}</td>
+        <td>{{ fila.45 }}</td>
+        <td>{{ fila.46 }}</td>
+        <td>{{ fila.47 }}</td>
+        <td>{{ fila.48 }}</td>
+        <td>{{ fila.49 }}</td>
+        <td>{{ fila.50 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Flujos</h3>
+
+  <table
+    class="table table-striped"
+    style="width: 90%; overflow-x: auto; display: block"
+    id="tabla_flujos"
+  >
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col">1</th>
+        <th scope="col">2</th>
+        <th scope="col">3</th>
+        <th scope="col">4</th>
+        <th scope="col">5</th>
+        <th scope="col">6</th>
+        <th scope="col">7</th>
+        <th scope="col">8</th>
+        <th scope="col">9</th>
+        <th scope="col">10</th>
+        <th scope="col">11</th>
+        <th scope="col">12</th>
+        <th scope="col">13</th>
+        <th scope="col">14</th>
+        <th scope="col">15</th>
+        <th scope="col">16</th>
+        <th scope="col">17</th>
+        <th scope="col">18</th>
+        <th scope="col">19</th>
+        <th scope="col">20</th>
+        <th scope="col">21</th>
+        <th scope="col">22</th>
+        <th scope="col">23</th>
+        <th scope="col">24</th>
+        <th scope="col">25</th>
+        <th scope="col">26</th>
+        <th scope="col">27</th>
+        <th scope="col">28</th>
+        <th scope="col">29</th>
+        <th scope="col">30</th>
+        <th scope="col">31</th>
+        <th scope="col">32</th>
+        <th scope="col">33</th>
+        <th scope="col">34</th>
+        <th scope="col">35</th>
+        <th scope="col">36</th>
+        <th scope="col">37</th>
+        <th scope="col">38</th>
+        <th scope="col">39</th>
+        <th scope="col">40</th>
+        <th scope="col">41</th>
+        <th scope="col">42</th>
+        <th scope="col">43</th>
+        <th scope="col">44</th>
+        <th scope="col">45</th>
+        <th scope="col">46</th>
+        <th scope="col">47</th>
+        <th scope="col">48</th>
+        <th scope="col">49</th>
+        <th scope="col">50</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for fila in json_flujos %}
+      <tr>
+        <th scope="row">{{ fila.Descripcion}}</th>
+        <td>{{ fila.Flujo }}</td>
+        <td>{{ fila.1 }}</td>
+        <td>{{ fila.2 }}</td>
+        <td>{{ fila.3 }}</td>
+        <td>{{ fila.4 }}</td>
+        <td>{{ fila.5 }}</td>
+        <td>{{ fila.6 }}</td>
+        <td>{{ fila.7 }}</td>
+        <td>{{ fila.8 }}</td>
+        <td>{{ fila.9 }}</td>
+        <td>{{ fila.10 }}</td>
+        <td>{{ fila.11 }}</td>
+        <td>{{ fila.12 }}</td>
+        <td>{{ fila.13 }}</td>
+        <td>{{ fila.14 }}</td>
+        <td>{{ fila.15 }}</td>
+        <td>{{ fila.16 }}</td>
+        <td>{{ fila.17 }}</td>
+        <td>{{ fila.18 }}</td>
+        <td>{{ fila.19 }}</td>
+        <td>{{ fila.20 }}</td>
+        <td>{{ fila.21 }}</td>
+        <td>{{ fila.22 }}</td>
+        <td>{{ fila.23 }}</td>
+        <td>{{ fila.24 }}</td>
+        <td>{{ fila.25 }}</td>
+        <td>{{ fila.26 }}</td>
+        <td>{{ fila.27 }}</td>
+        <td>{{ fila.28 }}</td>
+        <td>{{ fila.29 }}</td>
+        <td>{{ fila.30 }}</td>
+        <td>{{ fila.31 }}</td>
+        <td>{{ fila.32 }}</td>
+        <td>{{ fila.33 }}</td>
+        <td>{{ fila.34 }}</td>
+        <td>{{ fila.35 }}</td>
+        <td>{{ fila.36 }}</td>
+        <td>{{ fila.37 }}</td>
+        <td>{{ fila.38 }}</td>
+        <td>{{ fila.39 }}</td>
+        <td>{{ fila.40 }}</td>
+        <td>{{ fila.41 }}</td>
+        <td>{{ fila.42 }}</td>
+        <td>{{ fila.43 }}</td>
+        <td>{{ fila.44 }}</td>
+        <td>{{ fila.45 }}</td>
+        <td>{{ fila.46 }}</td>
+        <td>{{ fila.47 }}</td>
+        <td>{{ fila.48 }}</td>
+        <td>{{ fila.49 }}</td>
+        <td>{{ fila.50 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="row" style="padding-bottom: 20px; padding-top: 20px">
+    <div id="chart_repartocapitales" class="chart"></div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,418 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.1/echarts.min.js"></script>
+<script src="{% static 'js/RepartoCapitales.js' %}"></script>
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+></script>
+
+<div class="main" style="padding-left: 5%; padding-bottom: 100px">
+  <h2>Capitalización</h2>
+
+  <div class="row" style="padding-bottom: 20px; padding-top: 20px">
+    <div class="col-sm-6">
+      <a
+        href="{% url  'DescargarCapitalizacion'%}"
+        class="btn btn-success"
+        style="float: left"
+        >Descargar Tablas</a
+      >
+    </div>
+    <div class="col-sm-6">
+      <a
+        href="{% url  'DescargarCapitalizacionAplicativo'%}"
+        class="btn btn-primary"
+        style="float: left"
+        >Descargar Aplicativo</a
+      >
+    </div>
+  </div>
+
+  <div class="parrafo">
+    <p>
+      Para el método de capitalización individual, se considera aportes
+      mensuales según una tasa de cotización dada. Estos aportes, se juntan en
+      algo análogo a una cuenta de ahorros que se cobrará en el momento de la
+      jubilación. Con dicho ahorro, se adquiere una renta vitalicia que se
+      cobrará de forma mensual junto al décimo tercero y décimo cuarto, que
+      consisten en una pensión adicional y un salario básico unificado.
+    </p>
+
+    <p>
+      ara este proyecto, en la tarificación se consideró una tasa de
+      revalorización salarial y también una revalorización de las pensiones.
+      Estas tasas de revalorización, tiene como objetivo evitar la pérdida de
+      poder adquisitivo debido a la inflación y demás factores.
+    </p>
+
+    <p>
+      Para calcular el ahorro, se consideró la tabla de salarios de la policía
+      según su edad y rango obtenida de la siguiente página
+      <a
+        href="https://ecuadoravisos.com/cuanto-gana-un-policia-en-ecuador-tabla-de-sueldos/"
+        style="color: blue"
+        >tabla de sueldos</a
+      >. Sin embargo, por facilidades del modelo, se consideraron solamente
+      intervalos de 5 años con suledos fijos. El valor del sueldo de cada
+      periodo, fue el sueldo promedio de cada rango en orden ascendente.
+    </p>
+
+    <p>
+      Dicho lo anterior, el cálculo del ahorro, se realizó a partir de la
+      siguiente fórmula, donde \(r\) es la edad de jubilación, \(i\) es el
+      interés efectivo de la operación y \(q_{1}-1\) es la tasa de
+      revalorización salarial.
+    </p>
+
+    <p>
+      $$ \text{Ahorro}= \sum_{j=1}^{r-1}\left(\text{Salario}_{j}\cdot t_{c}\cdot
+      q_{1}^{j-1}\cdot s_{12|i^{(12)}} \right)\cdot (1+i)^{r-j} $$
+    </p>
+
+    <p>
+      Por la ley de equivalencia financiera, se tiene que este ahorro debe ser
+      igual al valor de la operación de adquirir la renta vitalicia con la
+      pensión \(P\) a determinar, considerando una tasa de revalorización de
+      pensiones \(1-q_{2}\).
+    </p>
+
+    <p>
+      $$ \text{Ahorro}= \sum_{j=0}^{99-r} P\cdot q_{2}^{j} \cdot
+      _{j|}a_{r:1}^{(12)} + \sum_{j=0}^{99-r} P\cdot q_{2}^{j} \cdot
+      _{j|}a_{r:1} + \sum_{j=0}^{99-r} (SBU\cdot q_{1}^{r-25})\cdot q_{1}^{j}
+      \cdot _{j|}a_{r:1} $$
+    </p>
+
+    <p>
+      De la expresión anterior, se calcula la pensión igualando las ecuaciones
+      anteriores.
+    </p>
+  </div>
+  <h3>Consideraciones</h3>
+
+  <p class="parrafo">
+    Para la simulación de las tablas de pensión, se consideró una tasa de
+    interés del 4% al 8%, Tasa de cotización del 10%, tasa de revalorización
+    salarial del 3% y revalorización de pensiones del 2%. Además, se consideró
+    que el la pensión calculada solamente representa el 60% de la pensión total
+    a recibir, considerando un aporte del estado del 40%
+  </p>
+
+  <h2>Simulaciones</h2>
+
+  <div class="container">
+    <div class="row">
+      <h3>Interés 4.00%</h3>
+      <div class="col-md-6">
+        <h4>Hombres</h4>
+        <table
+          class="table table-striped"
+          style="width: 90%; overflow-x: auto; display: block"
+          id="tabla_pensionistas"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Edad</th>
+              <th scope="col">Pensión</th>
+              <th scope="col">Pensión VA</th>
+              <th scope="col">Tasa de reemplazo</th>
+              <th scope="col">Experanza de vida</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for fila in json_s_4h %}
+            <tr>
+              <th scope="row">{{ fila.Edad}}</th>
+              <td>${{ fila.Pension }}</td>
+              <td>${{ fila.Pension_VA }}</td>
+              <td>{{ fila.Tasa_Reemplazo }}%</td>
+              <td>{{ fila.Esperanza_vida }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-6">
+        <h4>Mujeres</h4>
+        <table
+          class="table table-striped"
+          style="width: 90%; overflow-x: auto; display: block"
+          id="tabla_pensionistas"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Edad</th>
+              <th scope="col">Pensión</th>
+              <th scope="col">Pensión VA</th>
+              <th scope="col">Tasa de reemplazo</th>
+              <th scope="col">Experanza de vida</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for fila in json_s_4m %}
+            <tr>
+              <th scope="row">{{ fila.Edad}}</th>
+              <td>${{ fila.Pension }}</td>
+              <td>${{ fila.Pension_VA }}</td>
+              <td>{{ fila.Tasa_Reemplazo }}%</td>
+              <td>{{ fila.Esperanza_vida }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <h3>Interés 5.00%</h3>
+      <div class="col-md-6">
+        <h4>Hombres</h4>
+        <table
+          class="table table-striped"
+          style="width: 90%; overflow-x: auto; display: block"
+          id="tabla_pensionistas"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Edad</th>
+              <th scope="col">Pensión</th>
+              <th scope="col">Pensión VA</th>
+              <th scope="col">Tasa de reemplazo</th>
+              <th scope="col">Experanza de vida</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for fila in json_s_5h %}
+            <tr>
+              <th scope="row">{{ fila.Edad}}</th>
+              <td>${{ fila.Pension }}</td>
+              <td>${{ fila.Pension_VA }}</td>
+              <td>{{ fila.Tasa_Reemplazo }}%</td>
+              <td>{{ fila.Esperanza_vida }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-6">
+        <h4>Mujeres</h4>
+        <table
+          class="table table-striped"
+          style="width: 90%; overflow-x: auto; display: block"
+          id="tabla_pensionistas"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Edad</th>
+              <th scope="col">Pensión</th>
+              <th scope="col">Pensión VA</th>
+              <th scope="col">Tasa de reemplazo</th>
+              <th scope="col">Experanza de vida</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for fila in json_s_5m %}
+            <tr>
+              <th scope="row">{{ fila.Edad}}</th>
+              <td>${{ fila.Pension }}</td>
+              <td>${{ fila.Pension_VA }}</td>
+              <td>{{ fila.Tasa_Reemplazo }}%</td>
+              <td>{{ fila.Esperanza_vida }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <h3>Interés 6.00%</h3>
+      <div class="col-md-6">
+        <h4>Hombres</h4>
+        <table
+          class="table table-striped"
+          style="width: 90%; overflow-x: auto; display: block"
+          id="tabla_pensionistas"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Edad</th>
+              <th scope="col">Pensión</th>
+              <th scope="col">Pensión VA</th>
+              <th scope="col">Tasa de reemplazo</th>
+              <th scope="col">Experanza de vida</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for fila in json_s_6h %}
+            <tr>
+              <th scope="row">{{ fila.Edad}}</th>
+              <td>${{ fila.Pension }}</td>
+              <td>${{ fila.Pension_VA }}</td>
+              <td>{{ fila.Tasa_Reemplazo }}%</td>
+              <td>{{ fila.Esperanza_vida }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-6">
+        <h4>Mujeres</h4>
+        <table
+          class="table table-striped"
+          style="width: 90%; overflow-x: auto; display: block"
+          id="tabla_pensionistas"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Edad</th>
+              <th scope="col">Pensión</th>
+              <th scope="col">Pensión VA</th>
+              <th scope="col">Tasa de reemplazo</th>
+              <th scope="col">Experanza de vida</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for fila in json_s_6m %}
+            <tr>
+              <th scope="row">{{ fila.Edad}}</th>
+              <td>${{ fila.Pension }}</td>
+              <td>${{ fila.Pension_VA }}</td>
+              <td>{{ fila.Tasa_Reemplazo }}%</td>
+              <td>{{ fila.Esperanza_vida }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <h3>Interés 7.00%</h3>
+      <div class="col-md-6">
+        <h4>Hombres</h4>
+        <table
+          class="table table-striped"
+          style="width: 90%; overflow-x: auto; display: block"
+          id="tabla_pensionistas"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Edad</th>
+              <th scope="col">Pensión</th>
+              <th scope="col">Pensión VA</th>
+              <th scope="col">Tasa de reemplazo</th>
+              <th scope="col">Experanza de vida</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for fila in json_s_7h %}
+            <tr>
+              <th scope="row">{{ fila.Edad}}</th>
+              <td>${{ fila.Pension }}</td>
+              <td>${{ fila.Pension_VA }}</td>
+              <td>{{ fila.Tasa_Reemplazo }}%</td>
+              <td>{{ fila.Esperanza_vida }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-6">
+        <h4>Mujeres</h4>
+        <table
+          class="table table-striped"
+          style="width: 90%; overflow-x: auto; display: block"
+          id="tabla_pensionistas"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Edad</th>
+              <th scope="col">Pensión</th>
+              <th scope="col">Pensión VA</th>
+              <th scope="col">Tasa de reemplazo</th>
+              <th scope="col">Experanza de vida</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for fila in json_s_7m %}
+            <tr>
+              <th scope="row">{{ fila.Edad}}</th>
+              <td>${{ fila.Pension }}</td>
+              <td>${{ fila.Pension_VA }}</td>
+              <td>{{ fila.Tasa_Reemplazo }}%</td>
+              <td>{{ fila.Esperanza_vida }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <h3>Interés 8.00%</h3>
+      <div class="col-md-6">
+        <h4>Hombres</h4>
+        <table
+          class="table table-striped"
+          style="width: 90%; overflow-x: auto; display: block"
+          id="tabla_pensionistas"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Edad</th>
+              <th scope="col">Pensión</th>
+              <th scope="col">Pensión VA</th>
+              <th scope="col">Tasa de reemplazo</th>
+              <th scope="col">Experanza de vida</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for fila in json_s_8h %}
+            <tr>
+              <th scope="row">{{ fila.Edad}}</th>
+              <td>${{ fila.Pension }}</td>
+              <td>${{ fila.Pension_VA }}</td>
+              <td>{{ fila.Tasa_Reemplazo }}%</td>
+              <td>{{ fila.Esperanza_vida }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-6">
+        <h4>Mujeres</h4>
+        <table
+          class="table table-striped"
+          style="width: 90%; overflow-x: auto; display: block"
+          id="tabla_pensionistas"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Edad</th>
+              <th scope="col">Pensión</th>
+              <th scope="col">Pensión VA</th>
+              <th scope="col">Tasa de reemplazo</th>
+              <th scope="col">Experanza de vida</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for fila in json_s_8m %}
+            <tr>
+              <th scope="row">{{ fila.Edad}}</th>
+              <td>${{ fila.Pension }}</td>
+              <td>${{ fila.Pension_VA }}</td>
+              <td>{{ fila.Tasa_Reemplazo }}%</td>
+              <td>{{ fila.Esperanza_vida }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="row" style="padding-bottom: 20px; padding-top: 20px">
+    <div id="chart_repartocapitales" class="chart"></div>
+  </div> -->
+</div>
+
+{% endblock %}

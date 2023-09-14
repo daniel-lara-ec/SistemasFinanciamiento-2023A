@@ -1,0 +1,449 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.1/echarts.min.js"></script>
+<script src="{% static 'js/RepartoEscalonado.js' %}"></script>
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+></script>
+
+<div class="main" style="padding-left: 5%; padding-bottom: 100px">
+  <h2>Reparto escalonado</h2>
+
+  <div class="row" style="padding-bottom: 20px; padding-top: 20px">
+    <div class="col-sm-6">
+      <a
+        href="{% url  'DescargarEscalonado'%}"
+        class="btn btn-success"
+        style="float: left"
+        >Descargar</a
+      >
+    </div>
+  </div>
+
+  <p class="parrafo">
+    El reparto simple escalonado es un sistema de financiamiento que busca el
+    equilibrio financiero después de un intervalo de tiempo, por ejemplo, cada 5
+    años. En este enfoque, se ajusta la tasa de cotización en cada intervalo de
+    tiempo, generalmente cada cinco años, para garantizar que los ingresos y los
+    gastos se equilibren.
+  </p>
+  <p class="parrafo">
+    A diferencia del reparto simple, donde se mantiene constante la tasa de
+    cotización, en el reparto simple escalonado, tanto los salarios como las
+    pensiones pueden ser revalorizados, y los fondos acumulados se capitalizan
+    según el crecimiento de los salarios. Esto permite adaptarse a cambios
+    económicos y mantener la sostenibilidad del sistema.
+  </p>
+
+  <p class="parrafo" style="color: red">
+    Si deseas revisar la metodoogía de cálculo de los beneficios, puedes
+    descargar el archivo del modelo.
+  </p>
+
+  <h3>Consideraciones</h3>
+
+  <p class="parrafo">
+    A continuación se encuentra un ejemplo del modelo con los siguientes
+    parámetros:
+  </p>
+
+  <!-- table of 2 rows and two columns -->
+  <table class="table table-striped" style="width: 90%; overflow-x: auto">
+    <thead>
+      <tr>
+        <th scope="col">Parámetro</th>
+        <th scope="col">Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Revalorización de salarios</th>
+        <td>0.00%</td>
+      </tr>
+      <tr>
+        <th scope="row">Revalorización de pensiones</th>
+        <td>0.00%</td>
+      </tr>
+      <tr>
+        <th scope="row">Interés</th>
+        <td>5.00%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Resúmen del modelo</h2>
+
+  <table
+    class="table table-striped"
+    style="width: 90%; overflow-x: auto; display: block"
+    id="tabla_pensionistas"
+  >
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">1</th>
+        <th scope="col">2</th>
+        <th scope="col">3</th>
+        <th scope="col">4</th>
+        <th scope="col">5</th>
+        <th scope="col">6</th>
+        <th scope="col">7</th>
+        <th scope="col">8</th>
+        <th scope="col">9</th>
+        <th scope="col">10</th>
+        <th scope="col">11</th>
+        <th scope="col">12</th>
+        <th scope="col">13</th>
+        <th scope="col">14</th>
+        <th scope="col">15</th>
+        <th scope="col">16</th>
+        <th scope="col">17</th>
+        <th scope="col">18</th>
+        <th scope="col">19</th>
+        <th scope="col">20</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for fila in json_resumen %}
+      <tr>
+        <th scope="row">{{ fila.Descripcion}}</th>
+        <td>{{ fila.1 }}</td>
+        <td>{{ fila.2 }}</td>
+        <td>{{ fila.3 }}</td>
+        <td>{{ fila.4 }}</td>
+        <td>{{ fila.5 }}</td>
+        <td>{{ fila.6 }}</td>
+        <td>{{ fila.7 }}</td>
+        <td>{{ fila.8 }}</td>
+        <td>{{ fila.9 }}</td>
+        <td>{{ fila.10 }}</td>
+        <td>{{ fila.11 }}</td>
+        <td>{{ fila.12 }}</td>
+        <td>{{ fila.13 }}</td>
+        <td>{{ fila.14 }}</td>
+        <td>{{ fila.15 }}</td>
+        <td>{{ fila.16 }}</td>
+        <td>{{ fila.17 }}</td>
+        <td>{{ fila.18 }}</td>
+        <td>{{ fila.19 }}</td>
+        <td>{{ fila.20 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Gastos por pensiones</h2>
+
+  <table
+    class="table table-striped"
+    style="width: 90%; overflow-x: auto; display: block"
+    id="tabla_pensionistas"
+  >
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">1</th>
+        <th scope="col">2</th>
+        <th scope="col">3</th>
+        <th scope="col">4</th>
+        <th scope="col">5</th>
+        <th scope="col">6</th>
+        <th scope="col">7</th>
+        <th scope="col">8</th>
+        <th scope="col">9</th>
+        <th scope="col">10</th>
+        <th scope="col">11</th>
+        <th scope="col">12</th>
+        <th scope="col">13</th>
+        <th scope="col">14</th>
+        <th scope="col">15</th>
+        <th scope="col">16</th>
+        <th scope="col">17</th>
+        <th scope="col">18</th>
+        <th scope="col">19</th>
+        <th scope="col">20</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for fila in json_gasto %}
+      <tr>
+        <th scope="row">{{ fila.Descripcion}}</th>
+        <td>{{ fila.1 }}</td>
+        <td>{{ fila.2 }}</td>
+        <td>{{ fila.3 }}</td>
+        <td>{{ fila.4 }}</td>
+        <td>{{ fila.5 }}</td>
+        <td>{{ fila.6 }}</td>
+        <td>{{ fila.7 }}</td>
+        <td>{{ fila.8 }}</td>
+        <td>{{ fila.9 }}</td>
+        <td>{{ fila.10 }}</td>
+        <td>{{ fila.11 }}</td>
+        <td>{{ fila.12 }}</td>
+        <td>{{ fila.13 }}</td>
+        <td>{{ fila.14 }}</td>
+        <td>{{ fila.15 }}</td>
+        <td>{{ fila.16 }}</td>
+        <td>{{ fila.17 }}</td>
+        <td>{{ fila.18 }}</td>
+        <td>{{ fila.19 }}</td>
+        <td>{{ fila.20 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Pensiones en (0)</h3>
+
+  <table
+    class="table table-striped"
+    style="width: 90%; overflow-x: auto; display: block"
+    id="tabla_pensionistas"
+  >
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">1</th>
+        <th scope="col">2</th>
+        <th scope="col">3</th>
+        <th scope="col">4</th>
+        <th scope="col">5</th>
+        <th scope="col">6</th>
+        <th scope="col">7</th>
+        <th scope="col">8</th>
+        <th scope="col">9</th>
+        <th scope="col">10</th>
+        <th scope="col">11</th>
+        <th scope="col">12</th>
+        <th scope="col">13</th>
+        <th scope="col">14</th>
+        <th scope="col">15</th>
+        <th scope="col">16</th>
+        <th scope="col">17</th>
+        <th scope="col">18</th>
+        <th scope="col">19</th>
+        <th scope="col">20</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for fila in json_pensiones %}
+      <tr>
+        <th scope="row">{{ fila.Descripcion}}</th>
+        <td>{{ fila.1 }}</td>
+        <td>{{ fila.2 }}</td>
+        <td>{{ fila.3 }}</td>
+        <td>{{ fila.4 }}</td>
+        <td>{{ fila.5 }}</td>
+        <td>{{ fila.6 }}</td>
+        <td>{{ fila.7 }}</td>
+        <td>{{ fila.8 }}</td>
+        <td>{{ fila.9 }}</td>
+        <td>{{ fila.10 }}</td>
+        <td>{{ fila.11 }}</td>
+        <td>{{ fila.12 }}</td>
+        <td>{{ fila.13 }}</td>
+        <td>{{ fila.14 }}</td>
+        <td>{{ fila.15 }}</td>
+        <td>{{ fila.16 }}</td>
+        <td>{{ fila.17 }}</td>
+        <td>{{ fila.18 }}</td>
+        <td>{{ fila.19 }}</td>
+        <td>{{ fila.20 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Tasas de cotización</h3>
+
+  <table
+    class="table table-striped"
+    style="width: 90%; overflow-x: auto; display: block"
+    id="tabla_pensionistas"
+  >
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">1</th>
+        <th scope="col">2</th>
+        <th scope="col">3</th>
+        <th scope="col">4</th>
+        <th scope="col">5</th>
+        <th scope="col">6</th>
+        <th scope="col">7</th>
+        <th scope="col">8</th>
+        <th scope="col">9</th>
+        <th scope="col">10</th>
+        <th scope="col">11</th>
+        <th scope="col">12</th>
+        <th scope="col">13</th>
+        <th scope="col">14</th>
+        <th scope="col">15</th>
+        <th scope="col">16</th>
+        <th scope="col">17</th>
+        <th scope="col">18</th>
+        <th scope="col">19</th>
+        <th scope="col">20</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for fila in json_tasas %}
+      <tr>
+        <th scope="row">{{ fila.Descripcion}}</th>
+        <td>{{ fila.1 }}</td>
+        <td>{{ fila.2 }}</td>
+        <td>{{ fila.3 }}</td>
+        <td>{{ fila.4 }}</td>
+        <td>{{ fila.5 }}</td>
+        <td>{{ fila.6 }}</td>
+        <td>{{ fila.7 }}</td>
+        <td>{{ fila.8 }}</td>
+        <td>{{ fila.9 }}</td>
+        <td>{{ fila.10 }}</td>
+        <td>{{ fila.11 }}</td>
+        <td>{{ fila.12 }}</td>
+        <td>{{ fila.13 }}</td>
+        <td>{{ fila.14 }}</td>
+        <td>{{ fila.15 }}</td>
+        <td>{{ fila.16 }}</td>
+        <td>{{ fila.17 }}</td>
+        <td>{{ fila.18 }}</td>
+        <td>{{ fila.19 }}</td>
+        <td>{{ fila.20 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="row" style="padding-bottom: 20px; padding-top: 20px">
+    <div id="chart_repartoescalonado" class="chart"></div>
+  </div>
+
+  <h3>Salarios</h3>
+
+  <table
+    class="table table-striped"
+    style="width: 90%; overflow-x: auto; display: block"
+    id="tabla_pensionistas"
+  >
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">1</th>
+        <th scope="col">2</th>
+        <th scope="col">3</th>
+        <th scope="col">4</th>
+        <th scope="col">5</th>
+        <th scope="col">6</th>
+        <th scope="col">7</th>
+        <th scope="col">8</th>
+        <th scope="col">9</th>
+        <th scope="col">10</th>
+        <th scope="col">11</th>
+        <th scope="col">12</th>
+        <th scope="col">13</th>
+        <th scope="col">14</th>
+        <th scope="col">15</th>
+        <th scope="col">16</th>
+        <th scope="col">17</th>
+        <th scope="col">18</th>
+        <th scope="col">19</th>
+        <th scope="col">20</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for fila in json_salarios %}
+      <tr>
+        <th scope="row">{{ fila.Descripcion}}</th>
+        <td>{{ fila.1 }}</td>
+        <td>{{ fila.2 }}</td>
+        <td>{{ fila.3 }}</td>
+        <td>{{ fila.4 }}</td>
+        <td>{{ fila.5 }}</td>
+        <td>{{ fila.6 }}</td>
+        <td>{{ fila.7 }}</td>
+        <td>{{ fila.8 }}</td>
+        <td>{{ fila.9 }}</td>
+        <td>{{ fila.10 }}</td>
+        <td>{{ fila.11 }}</td>
+        <td>{{ fila.12 }}</td>
+        <td>{{ fila.13 }}</td>
+        <td>{{ fila.14 }}</td>
+        <td>{{ fila.15 }}</td>
+        <td>{{ fila.16 }}</td>
+        <td>{{ fila.17 }}</td>
+        <td>{{ fila.18 }}</td>
+        <td>{{ fila.19 }}</td>
+        <td>{{ fila.20 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Flujos</h3>
+
+  <table
+    class="table table-striped"
+    style="width: 90%; overflow-x: auto; display: block"
+    id="tabla_pensionistas"
+  >
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col">1</th>
+        <th scope="col">2</th>
+        <th scope="col">3</th>
+        <th scope="col">4</th>
+        <th scope="col">5</th>
+        <th scope="col">6</th>
+        <th scope="col">7</th>
+        <th scope="col">8</th>
+        <th scope="col">9</th>
+        <th scope="col">10</th>
+        <th scope="col">11</th>
+        <th scope="col">12</th>
+        <th scope="col">13</th>
+        <th scope="col">14</th>
+        <th scope="col">15</th>
+        <th scope="col">16</th>
+        <th scope="col">17</th>
+        <th scope="col">18</th>
+        <th scope="col">19</th>
+        <th scope="col">20</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for fila in json_reservas %}
+      <tr>
+        <th scope="row">{{ fila.Descripcion}}</th>
+        <td>{{ fila.Flujo }}</td>
+        <td>{{ fila.1 }}</td>
+        <td>{{ fila.2 }}</td>
+        <td>{{ fila.3 }}</td>
+        <td>{{ fila.4 }}</td>
+        <td>{{ fila.5 }}</td>
+        <td>{{ fila.6 }}</td>
+        <td>{{ fila.7 }}</td>
+        <td>{{ fila.8 }}</td>
+        <td>{{ fila.9 }}</td>
+        <td>{{ fila.10 }}</td>
+        <td>{{ fila.11 }}</td>
+        <td>{{ fila.12 }}</td>
+        <td>{{ fila.13 }}</td>
+        <td>{{ fila.14 }}</td>
+        <td>{{ fila.15 }}</td>
+        <td>{{ fila.16 }}</td>
+        <td>{{ fila.17 }}</td>
+        <td>{{ fila.18 }}</td>
+        <td>{{ fila.19 }}</td>
+        <td>{{ fila.20 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
